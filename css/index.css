@@ -1,4 +1,6 @@
 @import url("./variables.css");
+@import url("./fonts.css");
+@import url("/css/top-bar.css");
 /* Start Default Styles */
 html {
   box-sizing: border-box;
