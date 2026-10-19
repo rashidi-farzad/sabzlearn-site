@@ -154,6 +154,45 @@
   text-align: center;
   margin: 0 2rem;
 }
+.comments {
+  display: flex;
+  flex-direction: column;
+}
+.comments__title {
+  font-size: 1.3rem;
+  color: var(--dark-color);
+}
+.comments__text {
+  margin: 1.5rem 0;
+  font-size: 1.5rem;
+}
+.comments__content {
+  display: flex;
+  flex-direction: column;
+}
+.comments__content-title {
+  font-size: 1.5rem;
+  color: #6c757d;
+}
+.comments__content-textarea {
+  padding: 2rem;
+  height: 18.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #dcdcdc;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.07);
+  resize: none;
+}
+.comments__button {
+  margin-top: 2rem;
+  max-width: 15rem;
+  padding: 0.8rem 1.7rem;
+  background-color: var(--primary-color);
+  color: var(--white-color);
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1.5rem;
+  margin-bottom: 3rem;
+}
 /* Finish Article Details Styles */
 
 /* Start Sidebar Styles */
