@@ -217,6 +217,7 @@
             <input
               type="text"
               class="login-form__username-input"
+              id="name"
               placeholder="نام و نام خانوادگی"
             />
             <i class="fa fa-user login-form__username-icon"></i>
@@ -225,6 +226,7 @@
             <input
               type="text"
               class="login-form__username-input"
+              id="username"
               placeholder="نام کاربری"
             />
             <i class="fa fa-user login-form__username-icon"></i>
@@ -233,6 +235,7 @@
             <input
               type="email"
               class="login-form__username-input"
+              id="email"
               placeholder="آدرس ایمیل"
             />
             <i class="fa fa-user login-form__username-icon"></i>
@@ -241,6 +244,7 @@
             <input
               type="text"
               class="login-form__username-input"
+              id="phone"
               placeholder="شماره تماس"
             />
             <i class="fa fa-user login-form__username-icon"></i>
@@ -249,11 +253,12 @@
             <input
               type="password"
               class="login-form__password-input"
+              id="password"
               placeholder="رمز عبور"
             />
             <i class="fa fa-lock-open login-form__password-icon"></i>
           </div>
-          <button class="login-form__btn" type="submit">
+          <button class="login-form__btn" type="submit" id="register-btn">
             <i class="fas fa-sign-out-alt login-form__btn-icon"></i>
             <span class="login-form__btn-text">ثبت نام</span>
           </button>
@@ -373,5 +378,7 @@
     <!-- Finish Footer -->
     <script src="vendor/FontAwesome5/all.min.js"></script>
     <script src="vendor/Bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="js/register.js" type="module"></script>
   </body>
 </html>
