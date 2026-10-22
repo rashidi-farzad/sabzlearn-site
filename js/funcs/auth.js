@@ -1,3 +1,4 @@
+import { showSwal, saveIntoLocalStorage } from "./utils.js";
 const register = () => {
   const name = document.querySelector("#name");
   const username = document.querySelector("#username");
@@ -22,21 +23,60 @@ const register = () => {
   })
     .then((res) => {
       if (res.status === 201) {
-        swal({
-          title: "ثبت نام با موفقیت انجام شد",
-          icon: "success",
-          buttons: "ورود به پنل کاربری",
-        });
+        showSwal(
+          "ثبت نام با موفقیت انجام شد",
+          "success",
+          "ورود به پنل",
+          (result) => {
+            location.href = "index.html";
+          },
+        );
       } else if (res.status === 409) {
-        swal({
-          title: "نام کاربری یا ایمیل قبلا استفاده شده",
-          icon: "error",
-          buttons: "تصحیح اطلاعات",
+        showSwal(
+          "نام کاربری یا ایمیل قبلا استفاده شده",
+          "error",
+          "تصحیح اطلاعات",
+          () => {},
+        );
+      }
+      return res.json();
+    })
+    .then((result) => {
+      saveIntoLocalStorage("user", { token: result.accessToken });
+    });
+};
+const login = () => {
+  const identifierInput = document.querySelector("#identifier");
+  const passwordInput = document.querySelector("#password");
+  const userInfos = {
+    identifier: identifierInput.value,
+    password: passwordInput.value,
+  };
+  fetch("http://localhost:4000/v1/auth/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(userInfos),
+  })
+    .then((res) => {
+      if (res.status === 401) {
+        showSwal(
+          "کاربری با این اطلاعات یافت نشد",
+          "error",
+          "تصحیح اطلاعات",
+          () => {},
+        );
+      } else if (res.status === 200) {
+        showSwal("با موفقیت وارد شدید", "success", "ورود به پنل", () => {
+          location.href = "index.html";
         });
       }
       return res.json();
     })
-    .then((result) => console.log(result));
+    .then((result) => {
+      console.log(result);
+      saveIntoLocalStorage("user", { token: result.accessToken });
+    });
 };
-
-export { register };
+export { register, login };

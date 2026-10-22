@@ -154,3 +154,10 @@
   margin-right: 2rem;
   margin-top: 1rem;
 }
+.swal-title {
+  color: var(--dark-color);
+}
+.swal-button,
+.swal-button--confirm {
+  background-color: var(--primary-color);
+}
