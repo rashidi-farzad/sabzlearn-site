@@ -1,6 +1,6 @@
 @import "./variables.css";
 @import "./fonts.css";
-@import "./top-bar.css";
+@import './top-bar.css';
 @import "./navbar.css";
 @import "./defaults.css";
 @import "./footer.css";
@@ -10,9 +10,7 @@
 /* Start landing Styles */
 
 .landing {
-  background:
-    linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
-    url(../images/background_landing.jfif) no-repeat center center;
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(../images/background_landing.jfif) no-repeat center center;
   background-size: cover;
   background-attachment: fixed;
   text-align: center;
@@ -136,14 +134,17 @@
 .about-us {
   margin: 6rem 0;
 }
+
 .about-us__header {
   display: flex;
   flex-direction: column;
 }
+
 .about-us__subtitle {
   color: #9c9c9c;
   font-size: 1.5rem;
 }
+
 .about-us__box {
   display: flex;
   align-items: center;
@@ -152,44 +153,49 @@
   margin: 2rem 0;
   padding: 2rem 1.5rem;
 }
+
 .about-us__icon {
   color: #666;
   font-size: 6.5rem;
 }
+
 .about-us__box-left {
   display: flex;
   flex-direction: column;
   margin-right: 1rem;
 }
+
 .about-us__box-title {
   font-weight: bold;
   font-size: 1.8rem;
 }
+
 /* Finish About Us Styles */
 
-/* Start Popular Courses Styles */
 
-.popular,
-.presell {
+/* Start Popular Courses Styles */
+.popular, .presell {
   margin: 5rem 0;
 }
-.popular__slider .course-box,
-.presell__slider .course-box {
+
+.popular__slider .course-box, .presell__slider .course-box {
   margin: 0 1.3rem;
   box-shadow: 0 0 10px rgba(168, 172, 185, 0.3);
 }
-.popular__slider .course-box:hover,
-.presell__slider .course-box:hover {
+
+.popular__slider .course-box:hover, .presell__slider .course-box {
   transform: none;
 }
-.presell__slider,
-.popular__slider {
+
+.presell__slider, .popular__slider {
   margin: 4rem 0;
   position: relative;
 }
+
 /* Finish Popular Courses Styles */
 
 /* Start Articles Styles */
+
 
 .articles {
   margin: 4rem 0;
@@ -229,29 +235,36 @@
   margin-right: 0.5rem;
   font-size: 1.5rem;
 }
+
 .article-card {
   margin: 3rem 0;
   transition: all 400ms ease;
   border-radius: 1rem;
   box-shadow: 0 5px 30px rgba(70, 72, 77, 0.08);
 }
+
 .article-card:hover {
   transform: translateY(-0.6rem);
 }
+
 .article-card__img {
   border-radius: 1rem 1rem 0 0;
 }
+
 .article-card__content {
   padding: 1rem 2rem 3rem 2rem;
 }
+
 .article-card__link {
   font-weight: bold;
 }
+
 .article-card__text {
   color: #898989;
   font-size: 1.2rem;
   padding: 1rem 0 2.5rem 0;
 }
+
 .article-card__btn {
   color: var(--primary-color);
   border: 2px solid var(--primary-color);
@@ -260,8 +273,10 @@
   border-radius: 0.5rem;
   transition: all 400ms ease;
 }
+
 .article-card__btn:hover {
   color: var(--white-color);
   background-color: var(--primary-color);
 }
+
 /* Finish Articles Styles */

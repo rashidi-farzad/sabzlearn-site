@@ -7,6 +7,7 @@
   position: relative;
   margin-bottom: 5rem;
 }
+
 .footer-widgets::before {
   content: "";
   position: absolute;
@@ -20,6 +21,7 @@
   bottom: -1.5rem;
   border-radius: 5rem;
 }
+
 .footer-widgets__title {
   display: block;
   font-size: 1.7rem;
@@ -27,6 +29,7 @@
   margin-bottom: 2rem;
   position: relative;
 }
+
 .footer-widgets__title::before {
   content: "";
   position: absolute;
@@ -38,17 +41,21 @@
   opacity: 0.3;
   transform: rotate(45deg);
 }
+
 .footer-widgets__text {
   color: #7d7e7f;
 }
+
 .footer-widgets__links {
   display: flex;
   flex-direction: column;
 }
+
 .footer-widgets__link {
   display: block;
   margin-bottom: 1rem;
 }
+
 .footer__copyright {
   display: flex;
   align-items: center;
@@ -56,8 +63,10 @@
   background-color: #f0f2f7;
   padding: 3rem 0;
 }
+
 .footer__copyright-text {
   color: var(--dark-color);
   font-weight: bold;
 }
+
 /* Finish Footer Styles */
