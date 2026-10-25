@@ -3,6 +3,7 @@ import {
   getAndShowPopularCourses,
   getAndShowPresellCourses,
   getAndShowArticles,
+  getAndShowNavbarMenus,
 } from "./funcs/shared.js";
 const $ = document;
 const landingTitle = $.querySelector(".landing__title");
@@ -21,6 +22,7 @@ window.addEventListener("load", () => {
   getAndShowPopularCourses();
   getAndShowPresellCourses();
   getAndShowArticles();
+  getAndShowNavbarMenus();
 });
 
 function typeWriter(text, index) {

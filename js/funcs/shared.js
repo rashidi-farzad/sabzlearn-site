@@ -233,7 +233,6 @@ const getAndShowArticles = async () => {
   const articlesWrapper = document.querySelector("#articles-wrapper");
   const res = await fetch("http://localhost:4000/v1/articles/");
   const articles = await res.json();
-  console.log(articles);
   articles.slice(0, 6).forEach((article) => {
     articlesWrapper.insertAdjacentHTML(
       "beforeend",
@@ -266,6 +265,40 @@ const getAndShowArticles = async () => {
   });
   return articles;
 };
+const getAndShowNavbarMenus = async () => {
+  const menusWrapper = document.querySelector("#menus-wrapper");
+  const res = await fetch("http://localhost:4000/v1/menus");
+  const menus = await res.json();
+  menus.forEach((menu) => {
+    menusWrapper.insertAdjacentHTML(
+      "beforeend",
+      `
+    <li class="main-header__item">
+    <a href="#" class="main-header__link">${menu.title}
+      ${
+        menu.submenus.length !== 0
+          ? `<i class="fas fa-angle-down main-header__link-icon"></i>
+        <ul class="main-header__dropdown">
+        ${menu.submenus
+          .map(
+            (submenu) =>
+              `<li class="main-header__dropdown-item">
+            <a href="#" class="main-header__dropdown-link">
+             ${submenu.title}
+            </a>
+          </li>`,
+          )
+          .join("")}
+        </ul>`
+          : ""
+      }
+    </a>
+  </li>
+    `,
+    );
+  });
+  return menus;
+};
 export {
   showUsernameInNavbar,
   renderTopbarMenus,
@@ -273,4 +306,5 @@ export {
   getAndShowPopularCourses,
   getAndShowPresellCourses,
   getAndShowArticles,
+  getAndShowNavbarMenus,
 };
