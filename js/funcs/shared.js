@@ -1,5 +1,5 @@
 import { getMe } from "./auth.js";
-import { isLogin, getUrlParam, getToken } from "./utils.js";
+import { isLogin, getUrlParam, getToken, showSwal } from "./utils.js";
 
 const showUserNameInNavbar = () => {
   const navbarProfileBox = document.querySelector(".main-header__profile");
@@ -676,6 +676,37 @@ const getSessionDetails = async () => {
 
   return responseData;
 };
+const submitContactUsMsg = async () => {
+  const nameInputElem = document.querySelector("#name");
+  const emailInputElem = document.querySelector("#email");
+  const phoneInputElem = document.querySelector("#phone");
+  const bodyInputElem = document.querySelector("#body");
+  const newContactUsInfos = {
+    name: nameInputElem.value.trim(),
+    email: emailInputElem.value.trim(),
+    phone: phoneInputElem.value.trim(),
+    body: bodyInputElem.value.trim(),
+  };
+  const res = await fetch(`http://localhost:4000/v1/contact`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(newContactUsInfos),
+  });
+  if (res.status === 201) {
+    showSwal(
+      "پیغام شما با موفقیت ثبت شد",
+      "success",
+      "ورود به پنل",
+      (result) => {
+        location.href = "index.html";
+      },
+    );
+  } else {
+    showSwal("مشکلی در ارسال پیام وجود دارد", "error", "تلاش مجدد", () => {});
+  }
+};
 export {
   showUserNameInNavbar,
   renderTopbarMenus,
@@ -690,4 +721,5 @@ export {
   getCourseDetails,
   getAndShowRelatedCourses,
   getSessionDetails,
+  submitContactUsMsg,
 };
