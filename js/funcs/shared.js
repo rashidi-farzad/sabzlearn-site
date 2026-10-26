@@ -539,14 +539,32 @@ const getCourseDetails = () => {
                     index + 1
                   }</span>
                   <i class="fab fa-youtube introduction__accordion-icon"></i>
-                  <a href="#" class="introduction__accordion-link">
-                    ${session.title}
-                  </a>
-                </div>
+                  ${
+                    session.free || course.isUserRegisteredToThisCourse
+                      ? `
+                        <a href="#" class="introduction__accordion-link">
+                          ${session.title}
+                        </a>
+                    `
+                      : `
+                        <span class="introduction__accordion-link">
+                          ${session.title}
+                        </span>
+               
+                    `
+                  }
+                  </div>
                 <div class="introduction__accordion-left">
                   <span class="introduction__accordion-time">
                     ${session.time}
                   </span>
+                  ${
+                    !(session.free || course.isUserRegisteredToThisCourse)
+                      ? `
+                      <i class="fa fa-lock"></i>
+                    `
+                      : ""
+                  }
                 </div>
               </div>
           `,
