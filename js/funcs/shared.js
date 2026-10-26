@@ -1,5 +1,5 @@
 import { getMe } from "./auth.js";
-import { isLogin, getUrlParam } from "./utils.js";
+import { isLogin, getUrlParam, getToken } from "./utils.js";
 
 const showUserNameInNavbar = () => {
   const navbarProfileBox = document.querySelector(".main-header__profile");
@@ -46,13 +46,13 @@ const getAndShowAllCourses = async () => {
       `
     <div class="col-4">
                 <div class="course-box">
-                  <a href="#">
+                  <a href="course.html?name=${course.shortName}">
                     <img src=http://localhost:4000/courses/covers/${
                       course.cover
                     } alt="Course img" class="course-box__img" />
                   </a>
                   <div class="course-box__main">
-                    <a href="#" class="course-box__title">${course.name}</a>
+                    <a href="course.html?name=${course.shortName}" class="course-box__title">${course.name}</a>
 
                     <div class="course-box__rating-teacher">
                       <div class="course-box__teacher">
@@ -475,6 +475,139 @@ const coursesSorting = (array, filterMethod) => {
   }
   return outputArray;
 };
+const getCourseDetails = () => {
+  const courseShortName = getUrlParam("name");
+
+  // Select Elems From DOM
+  const $ = document;
+  const courseTitleElem = $.querySelector(".course-info__title");
+  const courseDescElem = $.querySelector(".course-info__text");
+  const courseCategoryElem = $.querySelector(".course-info__link");
+  const courseRegisterInfoElem = $.querySelector(
+    ".course-info__register-title",
+  );
+  const courseStatusElem = $.querySelector(".course-boxes__box-left--subtitle");
+  const courseSupperElem = $.querySelector(".course-boxes__box-left--support");
+  const courseLastUpdateElem = $.querySelector(
+    ".course-boxes__box-left--last-update",
+  );
+  const courseCommentsCountElem = $.querySelector(
+    ".course-info__total-comment-text",
+  );
+  const courseStudentsCountElem = $.querySelector(
+    ".course-info__total-sale-number",
+  );
+
+  fetch(`http://localhost:4000/v1/courses/${courseShortName}`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+  })
+    .then((res) => res.json())
+    .then((course) => {
+      console.log(course);
+      courseTitleElem.innerHTML = course.name;
+      courseDescElem.innerHTML = course.description;
+
+      courseCategoryElem.innerHTML = course.categoryID.title;
+      courseRegisterInfoElem.insertAdjacentHTML(
+        "beforeend",
+        course.isUserRegisteredToThisCourse
+          ? "دانشجوی دوره هستید"
+          : "ثبت نام در دوره",
+      );
+      courseStatusElem.innerHTML = course.isComplete
+        ? "تکمیل شده"
+        : "در حال برگزاری";
+      courseSupperElem.innerHTML = course.support;
+      courseLastUpdateElem.innerHTML = course.updatedAt.slice(0, 10);
+      courseCommentsCountElem.innerHTML = `${course.comments.length} دیدگاه`;
+      courseStudentsCountElem.innerHTML = course.courseStudentsCount;
+
+      // Show Course Sessions
+      const sessionsWrapper = $.querySelector(".sessions-wrapper");
+
+      if (course.sessions.length) {
+        course.sessions.forEach((session, index) => {
+          sessionsWrapper.insertAdjacentHTML(
+            "beforeend",
+            `
+              <div class="accordion-body introduction__accordion-body">
+                <div class="introduction__accordion-right">
+                  <span class="introduction__accordion-count">${
+                    index + 1
+                  }</span>
+                  <i class="fab fa-youtube introduction__accordion-icon"></i>
+                  <a href="#" class="introduction__accordion-link">
+                    ${session.title}
+                  </a>
+                </div>
+                <div class="introduction__accordion-left">
+                  <span class="introduction__accordion-time">
+                    ${session.time}
+                  </span>
+                </div>
+              </div>
+          `,
+          );
+        });
+      } else {
+        sessionsWrapper.insertAdjacentHTML(
+          "beforeend",
+          `
+              <div class="accordion-body introduction__accordion-body">
+                <div class="introduction__accordion-right">
+                  <span class="introduction__accordion-count"> -- </span>
+                  <i class="fab fa-youtube introduction__accordion-icon"></i>
+                  <a href="#" class="introduction__accordion-link">
+                    هنوز جلسه‌ای آپلود نشده
+                  </a>
+                </div>
+                <div class="introduction__accordion-left">
+                  <span class="introduction__accordion-time">
+                    00:00
+                  </span>
+                </div>
+              </div>
+          `,
+        );
+      }
+    });
+};
+const getAndShowRelatedCourses = async () => {
+  const courseShortName = getUrlParam("name");
+
+  const courseRelatedCoursesWrapper = document.querySelector(
+    ".course-info__courses-list",
+  );
+
+  const res = await fetch(
+    `http://localhost:4000/v1/courses/related/${courseShortName}`,
+  );
+  const relatedCourses = await res.json();
+
+  if (relatedCourses.length) {
+    relatedCourses.forEach((course) => {
+      courseRelatedCoursesWrapper.insertAdjacentHTML(
+        "beforeend",
+        `
+          <li class="course-info__courses-list-item">
+            <a href="course.html?name=${course.shortName}" class="course-info__courses-link">
+              <img src="http://localhost:4000/courses/covers/${course.cover}" alt="Course Cover" class="course-info__courses-img">
+              <span class="course-info__courses-text">
+                ${course.name}
+              </span>
+            </a>
+        </li>
+      `,
+      );
+    });
+  } else {
+  }
+
+  return relatedCourses;
+};
 export {
   showUserNameInNavbar,
   renderTopbarMenus,
@@ -486,4 +619,6 @@ export {
   getAndShowCategoryCourses,
   insertCourseBoxHtmlTemplate,
   coursesSorting,
+  getCourseDetails,
+  getAndShowRelatedCourses,
 };
