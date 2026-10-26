@@ -542,7 +542,7 @@ const getCourseDetails = () => {
                   ${
                     session.free || course.isUserRegisteredToThisCourse
                       ? `
-                        <a href="#" class="introduction__accordion-link">
+                        <a href="episode.html?name=${course.shortName}&id=${session._id}" class="introduction__accordion-link">
                           ${session.title}
                         </a>
                     `
@@ -626,6 +626,56 @@ const getAndShowRelatedCourses = async () => {
 
   return relatedCourses;
 };
+const getSessionDetails = async () => {
+  const courseShortName = getUrlParam("name");
+  const sessionID = getUrlParam("id");
+
+  const sessionVideoElem = document.querySelector(".episode-content__video");
+  const courseSessionsListElem = document.querySelector(
+    ".sidebar-topics__list",
+  );
+
+  const res = await fetch(
+    `http://localhost:4000/v1/courses/${courseShortName}/${sessionID}`,
+    {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    },
+  );
+  const responseData = await res.json();
+
+  sessionVideoElem.setAttribute(
+    "src",
+    `http://localhost:4000/courses/covers/${responseData.session.video}`,
+  );
+  responseData.sessions.forEach((session) => {
+    courseSessionsListElem.insertAdjacentHTML(
+      "beforeend",
+      `
+        <li class="sidebar-topics__list-item">
+          <div class="sidebar-topics__list-right">
+            <svg class="svg-inline--fa fa-circle-play sidebar-topics__list-item-icon" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle-play" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256zM176 168V344C176 352.7 180.7 360.7 188.3 364.9C195.8 369.2 205.1 369 212.5 364.5L356.5 276.5C363.6 272.1 368 264.4 368 256C368 247.6 363.6 239.9 356.5 235.5L212.5 147.5C205.1 142.1 195.8 142.8 188.3 147.1C180.7 151.3 176 159.3 176 168V168z"></path></svg><!-- <i class="sidebar-topics__list-item-icon fa fa-play-circle"></i> Font Awesome fontawesome.com -->
+            ${
+              session.free
+                ? `
+                <a class="sidebar-topics__list-item-link" href="episode.html?name${courseShortName}&id=${session._id}">${session.title}</a>
+              `
+                : `
+                <span class="sidebar-topics__list-item-link">${session.title}</span>
+              `
+            }
+          </div>
+          <div class="sidebar-topics__list-left">
+            <span class="sidebar-topics__list-item-time">${session.time}</span>
+          </div>
+        </li>
+    `,
+    );
+  });
+
+  return responseData;
+};
 export {
   showUserNameInNavbar,
   renderTopbarMenus,
@@ -639,4 +689,5 @@ export {
   coursesSorting,
   getCourseDetails,
   getAndShowRelatedCourses,
+  getSessionDetails,
 };
