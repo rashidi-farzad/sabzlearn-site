@@ -3,7 +3,13 @@ import {
   insertCourseBoxHtmlTemplate,
   coursesSorting,
 } from "./funcs/shared.js";
-import { searchInArray } from "./funcs/utils.js";
+import {
+  searchInArray,
+  paginateItems,
+  getUrlParam,
+  addParamToUrl,
+} from "./funcs/utils.js";
+window.addParamToUrl = addParamToUrl;
 window.addEventListener("load", () => {
   getAndShowCategoryCourses().then((responseCourses) => {
     let courses = [...responseCourses];
@@ -114,5 +120,23 @@ window.addEventListener("load", () => {
         );
       }
     });
+    // Handle Pagination
+    const coursesPaginationWrapper = document.querySelector(
+      ".courses__pagination-list",
+    );
+    const currentPage = getUrlParam("page");
+
+    const shownCourses = paginateItems(
+      [...responseCourses],
+      3,
+      coursesPaginationWrapper,
+      currentPage,
+    );
+
+    insertCourseBoxHtmlTemplate(
+      [...shownCourses],
+      coursesShowType,
+      categoryCoursesWrapper,
+    );
   });
 });

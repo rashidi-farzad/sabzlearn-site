@@ -35,6 +35,50 @@ const searchInArray = (array, searchProperty, searchValue) => {
   );
   return outputArray;
 };
+const addParamToUrl = (param, value) => {
+  let url = new URL(location.href);
+  let searchParams = url.searchParams;
+  searchParams.set(param, value);
+  url.search = searchParams.toString();
+  location.href = url.toString();
+};
+const paginateItems = (
+  array,
+  itemsPerPage,
+  paginateParentElem,
+  currentPage,
+) => {
+  paginateParentElem.innerHTML = "";
+  let endIndex = itemsPerPage * currentPage;
+  let startIndex = endIndex - itemsPerPage;
+  let paginatedItems = array.slice(startIndex, endIndex);
+  let paginatedCount = Math.ceil(array.length / itemsPerPage);
+
+  for (let i = 1; i < paginatedCount + 1; i++) {
+    paginateParentElem.insertAdjacentHTML(
+      "beforeend",
+      `
+        <li class="courses__pagination-item">
+        ${
+          i === +currentPage
+            ? `
+          <a onclick="addParamToUrl('page',${i})" class="courses__pagination-link courses__pagination-link--active">
+            ${i}
+          </a>
+          `
+            : `
+              <a onclick="addParamToUrl('page',${i})" class="courses__pagination-link">
+            ${i}
+          </a>
+            `
+        }
+          
+        </li>
+    `,
+    );
+  }
+  return paginatedItems;
+};
 export {
   showSwal,
   saveIntoLocalStorage,
@@ -43,4 +87,6 @@ export {
   isLogin,
   getUrlParam,
   searchInArray,
+  paginateItems,
+  addParamToUrl,
 };

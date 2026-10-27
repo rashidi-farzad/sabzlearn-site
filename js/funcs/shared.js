@@ -282,35 +282,50 @@ const getAndShowArticles = async () => {
 const getAndShowNavbarMenus = async () => {
   const menusWrapper = document.querySelector("#menus-wrapper");
 
-  const res = await fetch(`http://localhost:4000/v1/menus`);
+  const res = await fetch("http://localhost:4000/v1/menus");
   const menus = await res.json();
 
   menus.forEach((menu) => {
     menusWrapper.insertAdjacentHTML(
       "beforeend",
       `
-    <li class="main-header__item">
-    <a href=category.html?cat=${menu.href} class="main-header__link">${menu.title}
-      ${
-        menu.submenus.length !== 0
-          ? `<i class="fas fa-angle-down main-header__link-icon"></i>
-        <ul class="main-header__dropdown">
-        ${menu.submenus
-          .map(
-            (submenu) =>
-              `<li class="main-header__dropdown-item">
-            <a href="#" class="main-header__dropdown-link">
-             ${submenu.title}
-            </a>
-          </li>`,
-          )
-          .join("")}
-        </ul>`
-          : ""
-      }
-    </a>
-  </li>
-    `,
+        <li class="main-header__item">
+          <a
+            href="category.html?cat=${menu.href}&page=1"
+            class="main-header__link"
+          >
+            ${menu.title}
+            ${
+              menu.submenus.length !== 0
+                ? `<i class="fas fa-angle-down main-header__link-icon"></i>`
+                : ""
+            }
+          </a>
+
+          ${
+            menu.submenus.length !== 0
+              ? `
+                <ul class="main-header__dropdown">
+                  ${menu.submenus
+                    .map(
+                      (submenu) => `
+                        <li class="main-header__dropdown-item">
+                          <a
+                            href="#"
+                            class="main-header__dropdown-link"
+                          >
+                            ${submenu.title}
+                          </a>
+                        </li>
+                      `,
+                    )
+                    .join("")}
+                </ul>
+              `
+              : ""
+          }
+        </li>
+      `,
     );
   });
 
@@ -328,7 +343,11 @@ const getAndShowCategoryCourses = async () => {
 
   return courses;
 };
-const insertCourseBoxHtmlTemplate = (courses, showType, parentElement) => {
+const insertCourseBoxHtmlTemplate = (
+  courses,
+  showType = "row",
+  parentElement,
+) => {
   parentElement.innerHTML = "";
 
   if (showType === "row") {
@@ -906,6 +925,12 @@ const submitComment = async () => {
     showSwal("نظر شما با موفقیت ثبت شد", "success", "تایید", () => {});
   }
 };
+const showAllCoursesInCoursesPage = async () => {
+  const coursesWrapper = document.querySelector("#courses-wrapper");
+  const res = await fetch(`http://localhost:4000/v1/courses`);
+  const courses = await res.json();
+  return courses;
+};
 export {
   showUserNameInNavbar,
   renderTopbarMenus,
@@ -923,4 +948,5 @@ export {
   submitContactUsMsg,
   globalSearch,
   submitComment,
+  showAllCoursesInCoursesPage,
 };
