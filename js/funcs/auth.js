@@ -31,14 +31,21 @@ const register = () => {
           "ورود به پنل",
           (result) => {
             location.href = "index.html";
-          }
+          },
         );
       } else if (res.status === 409) {
         showSwal(
           "نام کاربری یا ایمیل قبلا استفاده شده",
           "error",
           "تصحیح اطلاعات",
-          () => {}
+          () => {},
+        );
+      } else if (res.status === 409) {
+        showSwal(
+          "نام کاربری یا ایمیل قبلا استفاده شده",
+          "error",
+          "تصحیح اطلاعات",
+          () => {},
         );
       }
       return res.json();
@@ -71,7 +78,7 @@ const login = () => {
           "کاربری با این اطلاعات یافت نشد",
           "error",
           "تصحیح اطلاعات",
-          () => {}
+          () => {},
         );
       } else if (res.status === 200) {
         showSwal("با موفقیت وارد شدید", "success", "ورود به پنل", () => {
