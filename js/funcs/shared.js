@@ -531,12 +531,56 @@ const getCourseDetails = () => {
       courseDescElem.innerHTML = course.description;
 
       courseCategoryElem.innerHTML = course.categoryID.title;
-      courseRegisterInfoElem.insertAdjacentHTML(
-        "beforeend",
-        course.isUserRegisteredToThisCourse
-          ? "دانشجوی دوره هستید"
-          : "ثبت نام در دوره",
-      );
+
+      if (course.isUserRegisteredToThisCourse) {
+        courseRegisterInfoElem.insertAdjacentHTML(
+          "beforeend",
+          `دانشجوی دوره هستید`,
+        );
+      } else {
+        courseRegisterInfoElem.insertAdjacentHTML(
+          "beforeend",
+          `ثبت نام در دوره`,
+        );
+        courseRegisterInfoElem.addEventListener("click", (event) => {
+          event.preventDefault();
+
+          if (course.price == 0) {
+            showSwal(
+              "آیا از ثبت نام در دوره اطمینان دارید؟",
+              "success",
+              ["نه", "آره"],
+              async (result) => {
+                if (result) {
+                  const res = await fetch(
+                    `http://localhost:4000/v1/courses/${course._id}/register`,
+                    {
+                      method: "POST",
+                      headers: {
+                        Authorization: `Bearer ${getToken()}`,
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({ price: 0 }),
+                    },
+                  );
+
+                  if (res.ok) {
+                    showSwal(
+                      "با موفقیت در دوره ثبت نام شدید",
+                      "success",
+                      "هورررراااا",
+                      () => {
+                        location.reload();
+                      },
+                    );
+                  }
+                }
+              },
+            );
+          }
+        });
+      }
+
       courseStatusElem.innerHTML = course.isComplete
         ? "تکمیل شده"
         : "در حال برگزاری";
