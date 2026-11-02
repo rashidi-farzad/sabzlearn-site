@@ -29,7 +29,7 @@ const getAndShowAllDiscountCodes = async () => {
                     <button type="button" class="btn btn-primary" id="edit-btn">ویرایش</button>
                 </td>
                 <td>
-                    <button type="button" class="btn btn-danger" id="delete-btn">حذف</button>
+                    <button type="button" onclick="removeDiscounCode('${code._id}')" class="btn btn-danger" id="delete-btn">حذف</button>
                 </td>
             </tr>
         `,
@@ -79,8 +79,36 @@ const createDiscountCode = async () => {
     });
   }
 };
+const removeDiscounCode = async (codeID) => {
+  showSwal(
+    "آیا از حذف کد تخفیف اطمینان دارید؟",
+    "warning",
+    ["خیر", "بله"],
+    async (result) => {
+      if (result) {
+        const res = await fetch(`http://localhost:4000/v1/offs/${codeID}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        });
+        if (res.ok) {
+          showSwal(
+            "کد تخفیف موردنظر با موفقیت حذف شد",
+            "success",
+            "تایید",
+            () => {
+              getAndShowAllDiscountCodes();
+            },
+          );
+        }
+      }
+    },
+  );
+};
 export {
   getAndShowAllDiscountCodes,
   prepareCreateNewDiscountCode,
   createDiscountCode,
+  removeDiscounCode,
 };
