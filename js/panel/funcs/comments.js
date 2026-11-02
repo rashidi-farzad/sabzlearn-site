@@ -26,10 +26,10 @@ const getAndShowAllComments = async () => {
                     <button type='button' class='btn btn-primary edit-btn'>پاسخ</button>
                 </td>
                 <td>
-                    <button type='button' class='btn btn-primary edit-btn'>تایید</button>
+                    <button type='button' onclick="acceptComment('${comment._id}')" class='btn btn-primary edit-btn'>تایید</button>
                 </td>
                 <td>
-                    <button type='button' class='btn btn-primary edit-btn'>رد</button>
+                    <button type='button' onclick="rejectComment('${comment._id}')" class='btn btn-primary edit-btn'>رد</button>
                 </td>
                 <td>
                     <button type='button' class='btn btn-danger delete-btn'>حذف</button>
@@ -45,4 +45,54 @@ const showCommentBody = (commentBody) => {
   showSwal(commentBody, undefined, "مشاهده کردم", () => {});
 };
 
-export { getAndShowAllComments, showCommentBody };
+const acceptComment = async (commentID) => {
+  showSwal(
+    "آیا از تایید کامنت اطمینان دارید؟",
+    "warning",
+    ["خیر", "بله"],
+    async (result) => {
+      if (result) {
+        const res = await fetch(
+          `http://localhost:4000/v1/comments/accept/${commentID}`,
+          {
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${getToken()}`,
+            },
+          },
+        );
+        if (res.ok) {
+          showSwal("کامنت با موفقیت تایید شد", "success", "تایید", () => {
+            getAndShowAllComments();
+          });
+        }
+      }
+    },
+  );
+};
+const rejectComment = async (commentID) => {
+  showSwal(
+    "آیا از رد کردن کامنت اطمینان دارید؟",
+    "warning",
+    ["خیر", "بله"],
+    async (result) => {
+      if (result) {
+        const res = await fetch(
+          `http://localhost:4000/v1/comments/reject/${commentID}`,
+          {
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${getToken()}`,
+            },
+          },
+        );
+        if (res.ok) {
+          showSwal("کامنت با موفقیت رد شد", "success", "تایید", () => {
+            getAndShowAllComments();
+          });
+        }
+      }
+    },
+  );
+};
+export { getAndShowAllComments, showCommentBody, acceptComment, rejectComment };
