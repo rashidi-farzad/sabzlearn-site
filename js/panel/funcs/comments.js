@@ -23,7 +23,7 @@ const getAndShowAllComments = async () => {
                     <button type='button'onclick="showCommentBody('${comment.body}')" class='btn btn-primary edit-btn'>مشاهده</button>
                 </td>
                 <td>
-                    <button type='button' class='btn btn-primary edit-btn'>پاسخ</button>
+                    <button type='button' onclick="answerToComment('${comment._id}')" class='btn btn-primary edit-btn'>پاسخ</button>
                 </td>
                 <td>
                     <button type='button' onclick="acceptComment('${comment._id}')" class='btn btn-primary edit-btn'>تایید</button>
@@ -95,4 +95,35 @@ const rejectComment = async (commentID) => {
     },
   );
 };
-export { getAndShowAllComments, showCommentBody, acceptComment, rejectComment };
+
+const answerToComment = async (commentID) => {
+  swal({
+    title: "متن پاسخ را وارد نمایید:",
+    content: "input",
+    buttons: "ثبت پاسخ",
+  }).then((body) => {
+    if (body) {
+      fetch(`http://localhost:4000/v1/comments/answer/${commentID}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ body }),
+      }).then((res) => {
+        if (res.ok) {
+          showSwal("پاسخ مورد نظر با موفقیت ثب  شد", "success", "تایید", () => {
+            getAndShowAllComments();
+          });
+        }
+      });
+    }
+  });
+};
+export {
+  getAndShowAllComments,
+  showCommentBody,
+  acceptComment,
+  rejectComment,
+  answerToComment,
+};
