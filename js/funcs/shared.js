@@ -40,6 +40,8 @@ const getAndShowAllCourses = async () => {
   const res = await fetch(`http://localhost:4000/v1/courses`);
   const courses = await res.json();
 
+  console.log(courses);
+
   courses.slice(0, 6).map((course) => {
     coursesContainer.insertAdjacentHTML(
       "beforeend",
@@ -52,7 +54,9 @@ const getAndShowAllCourses = async () => {
                     } alt="Course img" class="course-box__img" />
                   </a>
                   <div class="course-box__main">
-                    <a href="course.html?name=${course.shortName}" class="course-box__title">${course.name}</a>
+                    <a href="course.html?name=${
+                      course.shortName
+                    }" class="course-box__title">${course.name}</a>
 
                     <div class="course-box__rating-teacher">
                       <div class="course-box__teacher">
@@ -66,14 +70,14 @@ const getAndShowAllCourses = async () => {
                         .fill(0)
                         .map(
                           (score) =>
-                            '<img src="images/svgs/star.svg" alt="rating" class="course-box__star">',
+                            '<img src="images/svgs/star.svg" alt="rating" class="course-box__star">'
                         )
                         .join("")}
                       ${Array(course.courseAverageScore)
                         .fill(0)
                         .map(
                           (score) =>
-                            '<img src="images/svgs/star_fill.svg" alt="rating" class="course-box__star">',
+                            '<img src="images/svgs/star_fill.svg" alt="rating" class="course-box__star">'
                         )
                         .join("")}
                       </div>
@@ -86,11 +90,18 @@ const getAndShowAllCourses = async () => {
                           course.registers
                         }</span>
                       </div>
-                      <span class="course-box__price">${
-                        course.price === 0
-                          ? "رایگان"
-                          : course.price.toLocaleString()
-                      }</span>
+                      
+                      <div class="courses-box__price">
+                        ${
+
+                          course.price === 0 ? "رایگان" : (course.price !== 0 && course.discount) && `
+                            <span class="courses-box__price-discount">${(course.price - (course.price * course.discount / 100)).toLocaleString()}</span>
+                            <span class="courses-box__price courses-box__undiscount">${course.price.toLocaleString()}</span>
+                          `
+
+                        }
+                      </div>
+                      
                     </div>
                   </div>
 
@@ -101,9 +112,16 @@ const getAndShowAllCourses = async () => {
                     </a>
                   </div>
 
+                  ${
+                    course.discount ? `
+                      <span class="courses-box__discount">${course.discount}%</span>
+                    ` : ``
+                  }
+                  
+
                 </div>
               </div>
-    `,
+    `
     );
   });
   return courses;
@@ -111,7 +129,7 @@ const getAndShowAllCourses = async () => {
 
 const getAndShowPopularCourses = async () => {
   const popularCoursesWrapper = document.querySelector(
-    "#popular-courses-wrapper",
+    "#popular-courses-wrapper"
   );
 
   const res = await fetch(`http://localhost:4000/v1/courses/popular`);
@@ -150,9 +168,19 @@ const getAndShowPopularCourses = async () => {
             <i class="fas fa-users course-box__users-icon"></i>
             <span class="course-box__users-text">${course.registers}</span>
           </div>
-          <span class="course-box__price">${
-            course.price === 0 ? "رایگان" : course.price.toLocaleString()
-          }</span>
+
+          <div class="courses-box__price">
+            ${
+
+              course.price === 0 ? "رایگان" : (course.price !== 0 && course.discount) && `
+                <span class="courses__box__price-discount">${course.price - (course.price * course.discount / 100)}</span>
+                <span class="courses__box__price courses-box__undiscount">${course.discount}</span>
+              `
+
+            }
+          </div>
+
+          
         </div>
       </div>
 
@@ -165,7 +193,7 @@ const getAndShowPopularCourses = async () => {
 
     </div>
   </div>
-    `,
+    `
     );
   });
 
@@ -174,7 +202,7 @@ const getAndShowPopularCourses = async () => {
 
 const getAndShowPresellCourses = async () => {
   const presellCoursesWrapper = document.querySelector(
-    "#presell-courses-wrapper",
+    "#presell-courses-wrapper"
   );
 
   const res = await fetch(`http://localhost:4000/v1/courses/presell`);
@@ -204,14 +232,14 @@ const getAndShowPresellCourses = async () => {
             .fill(0)
             .map(
               (score) =>
-                '<img src="images/svgs/star.svg" alt="rating" class="course-box__star">',
+                '<img src="images/svgs/star.svg" alt="rating" class="course-box__star">'
             )
             .join("")}
           ${Array(course.courseAverageScore)
             .fill(0)
             .map(
               (score) =>
-                '<img src="images/svgs/star_fill.svg" alt="rating" class="course-box__star">',
+                '<img src="images/svgs/star_fill.svg" alt="rating" class="course-box__star">'
             )
             .join("")}
           </div>
@@ -237,7 +265,7 @@ const getAndShowPresellCourses = async () => {
 
     </div>
   </div>
-    `,
+    `
     );
   });
 
@@ -272,7 +300,7 @@ const getAndShowArticles = async () => {
       </div>
     </div>
   </div>
-    `,
+    `
     );
   });
 
@@ -282,50 +310,37 @@ const getAndShowArticles = async () => {
 const getAndShowNavbarMenus = async () => {
   const menusWrapper = document.querySelector("#menus-wrapper");
 
-  const res = await fetch("http://localhost:4000/v1/menus");
+  const res = await fetch(`http://localhost:4000/v1/menus`);
   const menus = await res.json();
 
   menus.forEach((menu) => {
     menusWrapper.insertAdjacentHTML(
       "beforeend",
       `
-        <li class="main-header__item">
-          <a
-            href="category.html?cat=${menu.href}&page=1"
-            class="main-header__link"
-          >
-            ${menu.title}
-            ${
-              menu.submenus.length !== 0
-                ? `<i class="fas fa-angle-down main-header__link-icon"></i>`
-                : ""
-            }
-          </a>
-
-          ${
-            menu.submenus.length !== 0
-              ? `
-                <ul class="main-header__dropdown">
-                  ${menu.submenus
-                    .map(
-                      (submenu) => `
-                        <li class="main-header__dropdown-item">
-                          <a
-                            href="#"
-                            class="main-header__dropdown-link"
-                          >
-                            ${submenu.title}
-                          </a>
-                        </li>
-                      `,
-                    )
-                    .join("")}
-                </ul>
-              `
-              : ""
-          }
-        </li>
-      `,
+    <li class="main-header__item">
+    <a href=category.html?cat=${menu.href}&page=1 class="main-header__link">${
+        menu.title
+      }
+      ${
+        menu.submenus.length !== 0
+          ? `<i class="fas fa-angle-down main-header__link-icon"></i>
+        <ul class="main-header__dropdown">
+        ${menu.submenus
+          .map(
+            (submenu) =>
+              `<li class="main-header__dropdown-item">
+            <a href="#" class="main-header__dropdown-link">
+             ${submenu.title}
+            </a>
+          </li>`
+          )
+          .join("")}
+        </ul>`
+          : ""
+      }
+    </a>
+  </li>
+    `
     );
   });
 
@@ -333,20 +348,20 @@ const getAndShowNavbarMenus = async () => {
 };
 
 const getAndShowCategoryCourses = async () => {
-  const categoryName = getUrlParam("cat").split("/").pop();
+  const categoryName = getUrlParam("cat");
 
   const res = await fetch(
-    `http://localhost:4000/v1/courses/category/${categoryName}`,
+    `http://localhost:4000/v1/courses/category/${categoryName}`
   );
-
   const courses = await res.json();
 
   return courses;
 };
+
 const insertCourseBoxHtmlTemplate = (
   courses,
   showType = "row",
-  parentElement,
+  parentElement
 ) => {
   parentElement.innerHTML = "";
 
@@ -371,7 +386,20 @@ const insertCourseBoxHtmlTemplate = (
                     }</a>
                   </div>
                   <div class="course-box__rating">
-                   
+                    ${Array(5 - course.courseAverageScore)
+                      .fill(0)
+                      .map(
+                        (score) =>
+                          '<img src="images/svgs/star.svg" alt="rating" class="course-box__star">'
+                      )
+                      .join("")}
+                    ${Array(course.courseAverageScore)
+                      .fill(0)
+                      .map(
+                        (score) =>
+                          '<img src="images/svgs/star_fill.svg" alt="rating" class="course-box__star">'
+                      )
+                      .join("")}
                   </div>
                 </div>
         
@@ -399,7 +427,7 @@ const insertCourseBoxHtmlTemplate = (
         
             </div>
           </div>
-            `,
+            `
       );
     });
   } else {
@@ -431,7 +459,20 @@ const insertCourseBoxHtmlTemplate = (
                           }</span>
                       </div>
                       <div class="course__box-left-stars">
-                       
+                        ${Array(5 - course.courseAverageScore)
+                          .fill(0)
+                          .map(
+                            (score) =>
+                              '<img src="images/svgs/star.svg" alt="rating" class="course-box__star">'
+                          )
+                          .join("")}
+                        ${Array(course.courseAverageScore)
+                          .fill(0)
+                          .map(
+                            (score) =>
+                              '<img src="images/svgs/star_fill.svg" alt="rating" class="course-box__star">'
+                          )
+                          .join("")}
                       </div>
                   </div>
                   <div class="course__box-left-bottom">
@@ -464,19 +505,21 @@ const insertCourseBoxHtmlTemplate = (
           </div>
       </div>
   </div>
-      `,
+      `
       );
     });
   }
 };
+
 const coursesSorting = (array, filterMethod) => {
   let outputArray = [];
+
   switch (filterMethod) {
     case "free": {
       outputArray = array.filter((course) => course.price === 0);
       break;
     }
-    case "paid": {
+    case "money": {
       outputArray = array.filter((course) => course.price !== 0);
       break;
     }
@@ -488,12 +531,18 @@ const coursesSorting = (array, filterMethod) => {
       outputArray = array;
       break;
     }
+    case "default": {
+      outputArray = array;
+      break;
+    }
     default: {
       outputArray = array;
     }
   }
+
   return outputArray;
 };
+
 const getCourseDetails = () => {
   const courseShortName = getUrlParam("name");
 
@@ -503,18 +552,18 @@ const getCourseDetails = () => {
   const courseDescElem = $.querySelector(".course-info__text");
   const courseCategoryElem = $.querySelector(".course-info__link");
   const courseRegisterInfoElem = $.querySelector(
-    ".course-info__register-title",
+    ".course-info__register-title"
   );
   const courseStatusElem = $.querySelector(".course-boxes__box-left--subtitle");
   const courseSupperElem = $.querySelector(".course-boxes__box-left--support");
   const courseLastUpdateElem = $.querySelector(
-    ".course-boxes__box-left--last-update",
+    ".course-boxes__box-left--last-update"
   );
   const courseCommentsCountElem = $.querySelector(
-    ".course-info__total-comment-text",
+    ".course-info__total-comment-text"
   );
   const courseStudentsCountElem = $.querySelector(
-    ".course-info__total-sale-number",
+    ".course-info__total-sale-number"
   );
   const commentsContentWrapper = $.querySelector(".comments__content");
 
@@ -535,12 +584,12 @@ const getCourseDetails = () => {
       if (course.isUserRegisteredToThisCourse) {
         courseRegisterInfoElem.insertAdjacentHTML(
           "beforeend",
-          `دانشجوی دوره هستید`,
+          `دانشجوی دوره هستید`
         );
       } else {
         courseRegisterInfoElem.insertAdjacentHTML(
           "beforeend",
-          `ثبت نام در دوره`,
+          `ثبت نام در دوره`
         );
         courseRegisterInfoElem.addEventListener("click", (event) => {
           event.preventDefault();
@@ -561,7 +610,7 @@ const getCourseDetails = () => {
                         "Content-Type": "application/json",
                       },
                       body: JSON.stringify({ price: 0 }),
-                    },
+                    }
                   );
 
                   if (res.ok) {
@@ -571,11 +620,11 @@ const getCourseDetails = () => {
                       "هورررراااا",
                       () => {
                         location.reload();
-                      },
+                      }
                     );
                   }
                 }
-              },
+              }
             );
           } else {
             showSwal(
@@ -609,14 +658,14 @@ const getCourseDetails = () => {
                                   "کد تخفیف معتبر نمی‌باشد",
                                   "error",
                                   "ای بابا",
-                                  () => {},
+                                  () => {}
                                 );
                               } else if (res.status === 409) {
                                 showSwal(
                                   "مهلت استفاده از کد تخفیف به اتمام رسیده",
                                   "error",
                                   "ای بابا",
-                                  () => {},
+                                  () => {}
                                 );
                               }
                               return res.json();
@@ -632,12 +681,8 @@ const getCourseDetails = () => {
                                     Authorization: `Bearer ${getToken()}`,
                                     "Content-Type": "application/json",
                                   },
-                                  body: JSON.stringify({
-                                    price:
-                                      course.price -
-                                      (course.price * code.percent) / 100,
-                                  }),
-                                },
+                                  body: JSON.stringify({ price: course.price - (course.price * code.percent / 100) }),
+                                }
                               ).then((res) => {
                                 if (res.ok) {
                                   showSwal(
@@ -646,7 +691,7 @@ const getCourseDetails = () => {
                                     "هورررراااا",
                                     () => {
                                       location.reload();
-                                    },
+                                    }
                                   );
                                 }
                               });
@@ -662,7 +707,7 @@ const getCourseDetails = () => {
                               "Content-Type": "application/json",
                             },
                             body: JSON.stringify({ price: course.price }),
-                          },
+                          }
                         );
 
                         if (res.ok) {
@@ -672,14 +717,14 @@ const getCourseDetails = () => {
                             "هورررراااا",
                             () => {
                               location.reload();
-                            },
+                            }
                           );
                         }
                       }
-                    },
+                    }
                   );
                 }
-              },
+              }
             );
           }
         });
@@ -735,7 +780,7 @@ const getCourseDetails = () => {
                   }
                 </div>
               </div>
-          `,
+          `
           );
         });
       } else {
@@ -756,7 +801,7 @@ const getCourseDetails = () => {
                   </span>
                 </div>
               </div>
-          `,
+          `
         );
       }
 
@@ -782,7 +827,7 @@ const getCourseDetails = () => {
                                 </span>
                             <span class="comments__question-date comment-date">${comment.createdAt.slice(
                               0,
-                              10,
+                              10
                             )}</span>
                         </div>
                         <div class="comments__question-header-left">
@@ -828,7 +873,7 @@ const getCourseDetails = () => {
                     : ""
                 }
               </div>
-          `,
+          `
           );
         });
       } else {
@@ -836,20 +881,21 @@ const getCourseDetails = () => {
           "beforeend",
           `
           <div class="alert alert-danger">هنوز هیچ کامنتی برای این دوره ثبت نشده</div>
-        `,
+        `
         );
       }
     });
 };
+
 const getAndShowRelatedCourses = async () => {
   const courseShortName = getUrlParam("name");
 
   const courseRelatedCoursesWrapper = document.querySelector(
-    ".course-info__courses-list",
+    ".course-info__courses-list"
   );
 
   const res = await fetch(
-    `http://localhost:4000/v1/courses/related/${courseShortName}`,
+    `http://localhost:4000/v1/courses/related/${courseShortName}`
   );
   const relatedCourses = await res.json();
 
@@ -866,7 +912,7 @@ const getAndShowRelatedCourses = async () => {
               </span>
             </a>
         </li>
-      `,
+      `
       );
     });
   } else {
@@ -874,13 +920,14 @@ const getAndShowRelatedCourses = async () => {
 
   return relatedCourses;
 };
+
 const getSessionDetails = async () => {
   const courseShortName = getUrlParam("name");
   const sessionID = getUrlParam("id");
 
   const sessionVideoElem = document.querySelector(".episode-content__video");
   const courseSessionsListElem = document.querySelector(
-    ".sidebar-topics__list",
+    ".sidebar-topics__list"
   );
 
   const res = await fetch(
@@ -889,13 +936,13 @@ const getSessionDetails = async () => {
       headers: {
         Authorization: `Bearer ${getToken()}`,
       },
-    },
+    }
   );
   const responseData = await res.json();
 
   sessionVideoElem.setAttribute(
     "src",
-    `http://localhost:4000/courses/covers/${responseData.session.video}`,
+    `http://localhost:4000/courses/covers/${responseData.session.video}`
   );
   responseData.sessions.forEach((session) => {
     courseSessionsListElem.insertAdjacentHTML(
@@ -918,23 +965,26 @@ const getSessionDetails = async () => {
             <span class="sidebar-topics__list-item-time">${session.time}</span>
           </div>
         </li>
-    `,
+    `
     );
   });
 
   return responseData;
 };
+
 const submitContactUsMsg = async () => {
   const nameInputElem = document.querySelector("#name");
   const emailInputElem = document.querySelector("#email");
   const phoneInputElem = document.querySelector("#phone");
   const bodyInputElem = document.querySelector("#body");
+
   const newContactUsInfos = {
     name: nameInputElem.value.trim(),
     email: emailInputElem.value.trim(),
     phone: phoneInputElem.value.trim(),
     body: bodyInputElem.value.trim(),
   };
+
   const res = await fetch(`http://localhost:4000/v1/contact`, {
     method: "POST",
     headers: {
@@ -942,133 +992,180 @@ const submitContactUsMsg = async () => {
     },
     body: JSON.stringify(newContactUsInfos),
   });
+
   if (res.status === 201) {
     showSwal(
-      "پیغام شما با موفقیت ثبت شد",
+      "پیغام شما با موفقیت ارسال شد",
       "success",
       "ورود به پنل",
       (result) => {
         location.href = "index.html";
-      },
+      }
     );
   } else {
-    showSwal("مشکلی در ارسال پیام وجود دارد", "error", "تلاش مجدد", () => {});
+    showSwal(
+      "مشکلی در ارسال پیغام وجود دارد \n لطفا بعدا تست کنید",
+      "error",
+      "ای بابا",
+      () => {}
+    );
   }
 };
+
+const createNewNewsLetter = async () => {
+  const newsLetterInput = document.querySelector("#news-letter-input");
+
+  console.log(newsLetterInput);
+  const newNewsLetterEmailObj = {
+    email: newsLetterInput.value.trim(),
+  };
+
+  const res = await fetch(`http://localhost:4000/v1/newsletters`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(newNewsLetterEmailObj),
+  });
+
+  console.log(res);
+
+  if (res.ok) {
+    showSwal(
+      "با موفقیت در خبرنامه سبزلرن عضو شدید",
+      "success",
+      "متوجه شدم",
+      () => {}
+    );
+  }
+};
+
 const globalSearch = async () => {
   const searchValue = getUrlParam("value");
-  const coursesContainer = document.querySelector("#courses-container");
-  const articlesWrapper = document.querySelector("#articles-wrapper");
+  const coursesSearchResultWrapper =
+    document.querySelector("#courses-container");
+  const articlesSearchResultWrapper =
+    document.querySelector("#articles-wrapper");
+
   const res = await fetch(`http://localhost:4000/v1/search/${searchValue}`);
   const data = await res.json();
+
   if (data.allResultCourses.length) {
     data.allResultCourses.forEach((course) => {
-      coursesContainer.insertAdjacentHTML(
+      coursesSearchResultWrapper.insertAdjacentHTML(
         "beforeend",
         `
       <div class="col-4">
-                <div class="course-box">
-                  <a href="course.html?name=${course.shortName}">
-                    <img src=http://localhost:4000/courses/covers/${
-                      course.cover
-                    } alt="Course img" class="course-box__img" />
-                  </a>
-                  <div class="course-box__main">
-                    <a href="course.html?name=${course.shortName}" class="course-box__title">${course.name}</a>
+        <div class="course-box">
+          <a href="course.html?name=${course.shortName}">
+            <img src=http://localhost:4000/courses/covers/${
+              course.cover
+            } alt="Course img" class="course-box__img" />
+          </a>
+          <div class="course-box__main">
+            <a href="course.html?name=${
+              course.shortName
+            }" class="course-box__title">${course.name}</a>
 
-                    <div class="course-box__rating-teacher">
-                      <div class="course-box__teacher">
-                        <i class="fas fa-chalkboard-teacher course-box__teacher-icon"></i>
-                        <a href="#" class="course-box__teacher-link">
-                        محمد امین سعیدی راد
-                        </a>
-                      </div>
-                      <div class="course-box__rating">
-                      </div>
-                    </div>
-
-                    <div class="course-box__status">
-                      <div class="course-box__users">
-                        <i class="fas fa-users course-box__users-icon"></i>
-                        <span class="course-box__users-text">12</span>
-                      </div>
-                      <span class="course-box__price">${
-                        course.price === 0
-                          ? "رایگان"
-                          : course.price.toLocaleString()
-                      }</span>
-                    </div>
-                  </div>
-
-                  <div class="course-box__footer">
-                    <a href="#" class="course-box__footer-link">
-                      مشاهده اطلاعات
-                      <i class="fas fa-arrow-left course-box__footer-icon"></i>
-                    </a>
-                  </div>
-
-                </div>
+            <div class="course-box__rating-teacher">
+              <div class="course-box__teacher">
+                <i class="fas fa-chalkboard-teacher course-box__teacher-icon"></i>
+                <a href="#" class="course-box__teacher-link">محمدامین سعیدی راد</a>
               </div>
-      `,
+              <div class="course-box__rating">
+                <img src="images/svgs/star_fill.svg" alt="rating" class="course-box__star">
+                <img src="images/svgs/star_fill.svg" alt="rating" class="course-box__star">
+                <img src="images/svgs/star_fill.svg" alt="rating" class="course-box__star">
+                <img src="images/svgs/star_fill.svg" alt="rating" class="course-box__star">
+                <img src="images/svgs/star_fill.svg" alt="rating" class="course-box__star">
+              </div>
+            </div>
+
+            <div class="course-box__status">
+              <div class="course-box__users">
+                <i class="fas fa-users course-box__users-icon"></i>
+                <span class="course-box__users-text">${course.registers}</span>
+              </div>
+              <span class="course-box__price">${
+                course.price === 0 ? "رایگان" : course.price.toLocaleString()
+              }</span>
+            </div>
+          </div>
+
+          <div class="course-box__footer">
+            <a href="#" class="course-box__footer-link">
+              مشاهده اطلاعات
+              <i class="fas fa-arrow-left course-box__footer-icon"></i>
+            </a>
+          </div>
+
+        </div>
+      </div>
+    `
       );
     });
   } else {
-    coursesContainer.insertAdjacentHTML(
+    coursesSearchResultWrapper.insertAdjacentHTML(
       "beforeend",
       `
-                <div class="alert alert-danger">هیچ دوره ای برای کلمه "${searchValue}" یافت نشد</div>
-      `,
+      <div class="alert alert-danger">هیچ دوره‌ای برای جستجوی شما وجود ندارد</div>
+    `
     );
   }
+
   if (data.allResultArticles.length) {
     data.allResultArticles.forEach((article) => {
-      articlesWrapper.insertAdjacentHTML(
+      articlesSearchResultWrapper.insertAdjacentHTML(
         "beforeend",
         `
             <div class="col-4">
-        <div class="article-card">
-          <div class="article-card__header">
-            <a href="#" class="article-card__link-img">
-              <img src=http://localhost:4000/courses/covers/${article.cover} class="article-card__img" alt="Article Cover" />
-            </a>
-          </div>
-          <div class="article-card__content">
-            <a href="#" class="article-card__link">
-              ${article.title}
-            </a>
-            <p class="article-card__text">
-            ${article.description}
-            </p>
-            <a href="#" class="article-card__btn">بیشتر بخوانید</a>
-          </div>
-        </div>
-      </div>
-      `,
+              <div class="article-card">
+                <div class="article-card__header">
+                  <a href="#" class="article-card__link-img">
+                    <img src=http://localhost:4000/courses/covers/${article.cover} class="article-card__img" alt="Article Cover" />
+                  </a>
+                </div>
+                <div class="article-card__content">
+                  <a href="#" class="article-card__link">
+                    ${article.title}
+                  </a>
+                  <p class="article-card__text">
+                  ${article.description}
+                  </p>
+                  <a href="#" class="article-card__btn">بیشتر بخوانید</a>
+                </div>
+              </div>
+            </div>
+      `
       );
     });
   } else {
-    articlesWrapper.insertAdjacentHTML(
+    articlesSearchResultWrapper.insertAdjacentHTML(
       "beforeend",
       `
-                <div class="alert alert-danger">هیچ مقاله ای برای کلمه "${searchValue}" یافت نشد</div>
-      `,
+      <div class="alert alert-danger">هیچ مقاله‌ای برای جستجوی شما وجود ندارد</div>
+    `
     );
   }
+
   return data;
 };
+
 const submitComment = async () => {
-  const commentTextarea = document.querySelector(
-    ".comments__score-input-respond",
+  const commentTextareaElem = document.querySelector(
+    ".comments__score-input-respond"
   );
   const commentScoreElem = document.querySelector("#comment-score");
   let score = 5;
   let courseShortName = getUrlParam("name");
+
   commentScoreElem.addEventListener(
     "change",
-    (event) => (score = event.target.value),
+    (event) => (score = event.target.value)
   );
+
   const newCommentInfos = {
-    body: commentTextarea.value.trim(),
+    body: commentTextareaElem.value.trim(),
     courseShortName,
     score,
   };
@@ -1081,17 +1178,28 @@ const submitComment = async () => {
     },
     body: JSON.stringify(newCommentInfos),
   });
+
   console.log(res);
+
   if (res.ok) {
-    showSwal("نظر شما با موفقیت ثبت شد", "success", "تایید", () => {});
+    showSwal(
+      "کامنت مورد نظر شما با موفقیت ثبت شد",
+      "success",
+      "خیلی هم عالی",
+      () => {}
+    );
   }
 };
-const showAllCoursesInCoursesPage = async () => {
-  const coursesWrapper = document.querySelector("#courses-wrapper");
+
+const getAllCourses = async () => {
+  const coursesWrapperElem = document.querySelector("#courses-wrapper");
+
   const res = await fetch(`http://localhost:4000/v1/courses`);
   const courses = await res.json();
+
   return courses;
 };
+
 export {
   showUserNameInNavbar,
   renderTopbarMenus,
@@ -1107,7 +1215,8 @@ export {
   getAndShowRelatedCourses,
   getSessionDetails,
   submitContactUsMsg,
+  createNewNewsLetter,
   globalSearch,
   submitComment,
-  showAllCoursesInCoursesPage,
+  getAllCourses,
 };
