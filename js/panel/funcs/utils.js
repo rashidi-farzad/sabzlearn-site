@@ -6,12 +6,15 @@ const getAdminInfos = async () => {
       Authorization: `Bearer ${getToken()}`,
     },
   });
-  
-  const admin = await res.json()
 
-  return admin
+  const admin = await res.json();
+
+  return admin;
 };
 
-export {
-    getAdminInfos
-}
+const logout = () => {
+  localStorage.removeItem("user");
+  return true;
+};
+
+export { getAdminInfos, logout };

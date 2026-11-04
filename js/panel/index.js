@@ -1,8 +1,9 @@
-import { getAdminInfos } from "./funcs/utils.js";
+import { getAdminInfos, logout } from "./funcs/utils.js";
 import {
   insertNotificationHtmlTemplate,
   seenNotification,
 } from "./funcs/notificatios.js";
+import { showSwal } from "../funcs/utils.js";
 
 window.seenNotification = seenNotification;
 
@@ -10,7 +11,10 @@ window.addEventListener("load", () => {
   const adminWelcomeNameElem = document.querySelector("#admin-welcome-name");
   const adminNameElem = document.querySelector("#admin-name");
   const notificationsIconElem = document.querySelector("#notifications-icon");
-  const notificationsBoxElem = document.querySelector(".home-notification-modal");
+  const notificationsBoxElem = document.querySelector(
+    ".home-notification-modal",
+  );
+  const logoutBtnElem = document.querySelector("#logout-btn");
 
   getAdminInfos().then((admin) => {
     console.log(admin);
@@ -31,5 +35,21 @@ window.addEventListener("load", () => {
       notificationsBoxElem.classList.remove("active-modal-notfication");
     });
     insertNotificationHtmlTemplate(admin.notifications);
+  });
+  logoutBtnElem.addEventListener("click", (event) => {
+    event.preventDefault();
+    showSwal(
+      "آیا از خروج اطمینان دارید؟",
+      "warning",
+      ["خیر", "بله"],
+      (result) => {
+        if (result) {
+          showSwal("با موفقیت خارج شدید", "success", "تایید", () => {
+            logout();
+            location.href = "../../index.html";
+          });
+        }
+      },
+    );
   });
 });
