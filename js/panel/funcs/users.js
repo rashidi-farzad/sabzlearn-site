@@ -25,6 +25,11 @@ const getAndShowAllUsers = async () => {
               </button>
             </td>
             <td>
+              <button type="button" onclick="changeRole('${user._id}')" class="btn btn-primary edit-btn">
+                تغییر نقش
+              </button>
+            </td>
+            <td>
               <button type="button" onclick="removeUser('${user._id}')" class="btn btn-danger delete-btn">
                 حذف
               </button>
@@ -139,4 +144,45 @@ const createNewUser = async () => {
     return res.json();
   });
 };
-export { getAndShowAllUsers, removeUser, banUser, createNewUser };
+const changeRole = async (userID) => {
+  showSwal(
+    "آیا از تغییر نقش اطمینان دارید؟",
+    "warning",
+    ["نه", "آره"],
+    async (result) => {
+      if (result) {
+        swal({
+          title: "نقش جدید را وارد نمایید:",
+          content: "input",
+          button: "تغییر نقش",
+        }).then((newRole) => {
+          const userNewRoleInfos = {
+            role: newRole,
+            id: userID,
+          };
+
+          fetch(`http://localhost:4000/v1/users/role`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${getToken()}`,
+            },
+            body: JSON.stringify(userNewRoleInfos),
+          }).then((res) => {
+            if (res.ok) {
+              showSwal(
+                "نقش کاربر مورد نظر با موفقیت تغییر یافت",
+                "success",
+                "خیلی هم عالی",
+                () => {
+                  getAndShowAllUsers();
+                },
+              );
+            }
+          });
+        });
+      }
+    },
+  );
+};
+export { getAndShowAllUsers, removeUser, banUser, createNewUser, changeRole };
