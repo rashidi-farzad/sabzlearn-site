@@ -7,7 +7,7 @@ const showUserNameInNavbar = () => {
 
   if (isUserLogin) {
     const userInfos = getMe().then((data) => {
-      navbarProfileBox.setAttribute("href", "index.html");
+      navbarProfileBox.setAttribute("href", "my-account/Account/");
       navbarProfileBox.innerHTML = `<span class="main-header__profile-text">${data.name}</span>`;
     });
   } else {
@@ -70,14 +70,14 @@ const getAndShowAllCourses = async () => {
                         .fill(0)
                         .map(
                           (score) =>
-                            '<img src="images/svgs/star.svg" alt="rating" class="course-box__star">'
+                            '<img src="images/svgs/star.svg" alt="rating" class="course-box__star">',
                         )
                         .join("")}
                       ${Array(course.courseAverageScore)
                         .fill(0)
                         .map(
                           (score) =>
-                            '<img src="images/svgs/star_fill.svg" alt="rating" class="course-box__star">'
+                            '<img src="images/svgs/star_fill.svg" alt="rating" class="course-box__star">',
                         )
                         .join("")}
                       </div>
@@ -93,12 +93,14 @@ const getAndShowAllCourses = async () => {
                       
                       <div class="courses-box__price">
                         ${
-
-                          course.price === 0 ? "رایگان" : (course.price !== 0 && course.discount) && `
-                            <span class="courses-box__price-discount">${(course.price - (course.price * course.discount / 100)).toLocaleString()}</span>
+                          course.price === 0
+                            ? "رایگان"
+                            : course.price !== 0 &&
+                              course.discount &&
+                              `
+                            <span class="courses-box__price-discount">${(course.price - (course.price * course.discount) / 100).toLocaleString()}</span>
                             <span class="courses-box__price courses-box__undiscount">${course.price.toLocaleString()}</span>
                           `
-
                         }
                       </div>
                       
@@ -113,15 +115,17 @@ const getAndShowAllCourses = async () => {
                   </div>
 
                   ${
-                    course.discount ? `
+                    course.discount
+                      ? `
                       <span class="courses-box__discount">${course.discount}%</span>
-                    ` : ``
+                    `
+                      : ``
                   }
                   
 
                 </div>
               </div>
-    `
+    `,
     );
   });
   return courses;
@@ -129,7 +133,7 @@ const getAndShowAllCourses = async () => {
 
 const getAndShowPopularCourses = async () => {
   const popularCoursesWrapper = document.querySelector(
-    "#popular-courses-wrapper"
+    "#popular-courses-wrapper",
   );
 
   const res = await fetch(`http://localhost:4000/v1/courses/popular`);
@@ -171,12 +175,14 @@ const getAndShowPopularCourses = async () => {
 
           <div class="courses-box__price">
             ${
-
-              course.price === 0 ? "رایگان" : (course.price !== 0 && course.discount) && `
-                <span class="courses__box__price-discount">${course.price - (course.price * course.discount / 100)}</span>
+              course.price === 0
+                ? "رایگان"
+                : course.price !== 0 &&
+                  course.discount &&
+                  `
+                <span class="courses__box__price-discount">${course.price - (course.price * course.discount) / 100}</span>
                 <span class="courses__box__price courses-box__undiscount">${course.discount}</span>
               `
-
             }
           </div>
 
@@ -193,7 +199,7 @@ const getAndShowPopularCourses = async () => {
 
     </div>
   </div>
-    `
+    `,
     );
   });
 
@@ -202,7 +208,7 @@ const getAndShowPopularCourses = async () => {
 
 const getAndShowPresellCourses = async () => {
   const presellCoursesWrapper = document.querySelector(
-    "#presell-courses-wrapper"
+    "#presell-courses-wrapper",
   );
 
   const res = await fetch(`http://localhost:4000/v1/courses/presell`);
@@ -232,14 +238,14 @@ const getAndShowPresellCourses = async () => {
             .fill(0)
             .map(
               (score) =>
-                '<img src="images/svgs/star.svg" alt="rating" class="course-box__star">'
+                '<img src="images/svgs/star.svg" alt="rating" class="course-box__star">',
             )
             .join("")}
           ${Array(course.courseAverageScore)
             .fill(0)
             .map(
               (score) =>
-                '<img src="images/svgs/star_fill.svg" alt="rating" class="course-box__star">'
+                '<img src="images/svgs/star_fill.svg" alt="rating" class="course-box__star">',
             )
             .join("")}
           </div>
@@ -265,7 +271,7 @@ const getAndShowPresellCourses = async () => {
 
     </div>
   </div>
-    `
+    `,
     );
   });
 
@@ -300,7 +306,7 @@ const getAndShowArticles = async () => {
       </div>
     </div>
   </div>
-    `
+    `,
     );
   });
 
@@ -319,8 +325,8 @@ const getAndShowNavbarMenus = async () => {
       `
     <li class="main-header__item">
     <a href=category.html?cat=${menu.href}&page=1 class="main-header__link">${
-        menu.title
-      }
+      menu.title
+    }
       ${
         menu.submenus.length !== 0
           ? `<i class="fas fa-angle-down main-header__link-icon"></i>
@@ -332,7 +338,7 @@ const getAndShowNavbarMenus = async () => {
             <a href="#" class="main-header__dropdown-link">
              ${submenu.title}
             </a>
-          </li>`
+          </li>`,
           )
           .join("")}
         </ul>`
@@ -340,7 +346,7 @@ const getAndShowNavbarMenus = async () => {
       }
     </a>
   </li>
-    `
+    `,
     );
   });
 
@@ -351,7 +357,7 @@ const getAndShowCategoryCourses = async () => {
   const categoryName = getUrlParam("cat");
 
   const res = await fetch(
-    `http://localhost:4000/v1/courses/category/${categoryName}`
+    `http://localhost:4000/v1/courses/category/${categoryName}`,
   );
   const courses = await res.json();
 
@@ -361,7 +367,7 @@ const getAndShowCategoryCourses = async () => {
 const insertCourseBoxHtmlTemplate = (
   courses,
   showType = "row",
-  parentElement
+  parentElement,
 ) => {
   parentElement.innerHTML = "";
 
@@ -390,14 +396,14 @@ const insertCourseBoxHtmlTemplate = (
                       .fill(0)
                       .map(
                         (score) =>
-                          '<img src="images/svgs/star.svg" alt="rating" class="course-box__star">'
+                          '<img src="images/svgs/star.svg" alt="rating" class="course-box__star">',
                       )
                       .join("")}
                     ${Array(course.courseAverageScore)
                       .fill(0)
                       .map(
                         (score) =>
-                          '<img src="images/svgs/star_fill.svg" alt="rating" class="course-box__star">'
+                          '<img src="images/svgs/star_fill.svg" alt="rating" class="course-box__star">',
                       )
                       .join("")}
                   </div>
@@ -427,7 +433,7 @@ const insertCourseBoxHtmlTemplate = (
         
             </div>
           </div>
-            `
+            `,
       );
     });
   } else {
@@ -463,14 +469,14 @@ const insertCourseBoxHtmlTemplate = (
                           .fill(0)
                           .map(
                             (score) =>
-                              '<img src="images/svgs/star.svg" alt="rating" class="course-box__star">'
+                              '<img src="images/svgs/star.svg" alt="rating" class="course-box__star">',
                           )
                           .join("")}
                         ${Array(course.courseAverageScore)
                           .fill(0)
                           .map(
                             (score) =>
-                              '<img src="images/svgs/star_fill.svg" alt="rating" class="course-box__star">'
+                              '<img src="images/svgs/star_fill.svg" alt="rating" class="course-box__star">',
                           )
                           .join("")}
                       </div>
@@ -505,7 +511,7 @@ const insertCourseBoxHtmlTemplate = (
           </div>
       </div>
   </div>
-      `
+      `,
       );
     });
   }
@@ -552,18 +558,18 @@ const getCourseDetails = () => {
   const courseDescElem = $.querySelector(".course-info__text");
   const courseCategoryElem = $.querySelector(".course-info__link");
   const courseRegisterInfoElem = $.querySelector(
-    ".course-info__register-title"
+    ".course-info__register-title",
   );
   const courseStatusElem = $.querySelector(".course-boxes__box-left--subtitle");
   const courseSupperElem = $.querySelector(".course-boxes__box-left--support");
   const courseLastUpdateElem = $.querySelector(
-    ".course-boxes__box-left--last-update"
+    ".course-boxes__box-left--last-update",
   );
   const courseCommentsCountElem = $.querySelector(
-    ".course-info__total-comment-text"
+    ".course-info__total-comment-text",
   );
   const courseStudentsCountElem = $.querySelector(
-    ".course-info__total-sale-number"
+    ".course-info__total-sale-number",
   );
   const commentsContentWrapper = $.querySelector(".comments__content");
 
@@ -584,12 +590,12 @@ const getCourseDetails = () => {
       if (course.isUserRegisteredToThisCourse) {
         courseRegisterInfoElem.insertAdjacentHTML(
           "beforeend",
-          `دانشجوی دوره هستید`
+          `دانشجوی دوره هستید`,
         );
       } else {
         courseRegisterInfoElem.insertAdjacentHTML(
           "beforeend",
-          `ثبت نام در دوره`
+          `ثبت نام در دوره`,
         );
         courseRegisterInfoElem.addEventListener("click", (event) => {
           event.preventDefault();
@@ -610,7 +616,7 @@ const getCourseDetails = () => {
                         "Content-Type": "application/json",
                       },
                       body: JSON.stringify({ price: 0 }),
-                    }
+                    },
                   );
 
                   if (res.ok) {
@@ -620,11 +626,11 @@ const getCourseDetails = () => {
                       "هورررراااا",
                       () => {
                         location.reload();
-                      }
+                      },
                     );
                   }
                 }
-              }
+              },
             );
           } else {
             showSwal(
@@ -658,14 +664,14 @@ const getCourseDetails = () => {
                                   "کد تخفیف معتبر نمی‌باشد",
                                   "error",
                                   "ای بابا",
-                                  () => {}
+                                  () => {},
                                 );
                               } else if (res.status === 409) {
                                 showSwal(
                                   "مهلت استفاده از کد تخفیف به اتمام رسیده",
                                   "error",
                                   "ای بابا",
-                                  () => {}
+                                  () => {},
                                 );
                               }
                               return res.json();
@@ -681,8 +687,12 @@ const getCourseDetails = () => {
                                     Authorization: `Bearer ${getToken()}`,
                                     "Content-Type": "application/json",
                                   },
-                                  body: JSON.stringify({ price: course.price - (course.price * code.percent / 100) }),
-                                }
+                                  body: JSON.stringify({
+                                    price:
+                                      course.price -
+                                      (course.price * code.percent) / 100,
+                                  }),
+                                },
                               ).then((res) => {
                                 if (res.ok) {
                                   showSwal(
@@ -691,7 +701,7 @@ const getCourseDetails = () => {
                                     "هورررراااا",
                                     () => {
                                       location.reload();
-                                    }
+                                    },
                                   );
                                 }
                               });
@@ -707,7 +717,7 @@ const getCourseDetails = () => {
                               "Content-Type": "application/json",
                             },
                             body: JSON.stringify({ price: course.price }),
-                          }
+                          },
                         );
 
                         if (res.ok) {
@@ -717,14 +727,14 @@ const getCourseDetails = () => {
                             "هورررراااا",
                             () => {
                               location.reload();
-                            }
+                            },
                           );
                         }
                       }
-                    }
+                    },
                   );
                 }
-              }
+              },
             );
           }
         });
@@ -780,7 +790,7 @@ const getCourseDetails = () => {
                   }
                 </div>
               </div>
-          `
+          `,
           );
         });
       } else {
@@ -801,7 +811,7 @@ const getCourseDetails = () => {
                   </span>
                 </div>
               </div>
-          `
+          `,
         );
       }
 
@@ -827,7 +837,7 @@ const getCourseDetails = () => {
                                 </span>
                             <span class="comments__question-date comment-date">${comment.createdAt.slice(
                               0,
-                              10
+                              10,
                             )}</span>
                         </div>
                         <div class="comments__question-header-left">
@@ -873,7 +883,7 @@ const getCourseDetails = () => {
                     : ""
                 }
               </div>
-          `
+          `,
           );
         });
       } else {
@@ -881,7 +891,7 @@ const getCourseDetails = () => {
           "beforeend",
           `
           <div class="alert alert-danger">هنوز هیچ کامنتی برای این دوره ثبت نشده</div>
-        `
+        `,
         );
       }
     });
@@ -891,11 +901,11 @@ const getAndShowRelatedCourses = async () => {
   const courseShortName = getUrlParam("name");
 
   const courseRelatedCoursesWrapper = document.querySelector(
-    ".course-info__courses-list"
+    ".course-info__courses-list",
   );
 
   const res = await fetch(
-    `http://localhost:4000/v1/courses/related/${courseShortName}`
+    `http://localhost:4000/v1/courses/related/${courseShortName}`,
   );
   const relatedCourses = await res.json();
 
@@ -912,7 +922,7 @@ const getAndShowRelatedCourses = async () => {
               </span>
             </a>
         </li>
-      `
+      `,
       );
     });
   } else {
@@ -927,7 +937,7 @@ const getSessionDetails = async () => {
 
   const sessionVideoElem = document.querySelector(".episode-content__video");
   const courseSessionsListElem = document.querySelector(
-    ".sidebar-topics__list"
+    ".sidebar-topics__list",
   );
 
   const res = await fetch(
@@ -936,13 +946,13 @@ const getSessionDetails = async () => {
       headers: {
         Authorization: `Bearer ${getToken()}`,
       },
-    }
+    },
   );
   const responseData = await res.json();
 
   sessionVideoElem.setAttribute(
     "src",
-    `http://localhost:4000/courses/covers/${responseData.session.video}`
+    `http://localhost:4000/courses/covers/${responseData.session.video}`,
   );
   responseData.sessions.forEach((session) => {
     courseSessionsListElem.insertAdjacentHTML(
@@ -965,7 +975,7 @@ const getSessionDetails = async () => {
             <span class="sidebar-topics__list-item-time">${session.time}</span>
           </div>
         </li>
-    `
+    `,
     );
   });
 
@@ -1000,14 +1010,14 @@ const submitContactUsMsg = async () => {
       "ورود به پنل",
       (result) => {
         location.href = "index.html";
-      }
+      },
     );
   } else {
     showSwal(
       "مشکلی در ارسال پیغام وجود دارد \n لطفا بعدا تست کنید",
       "error",
       "ای بابا",
-      () => {}
+      () => {},
     );
   }
 };
@@ -1035,7 +1045,7 @@ const createNewNewsLetter = async () => {
       "با موفقیت در خبرنامه سبزلرن عضو شدید",
       "success",
       "متوجه شدم",
-      () => {}
+      () => {},
     );
   }
 };
@@ -1101,7 +1111,7 @@ const globalSearch = async () => {
 
         </div>
       </div>
-    `
+    `,
       );
     });
   } else {
@@ -1109,7 +1119,7 @@ const globalSearch = async () => {
       "beforeend",
       `
       <div class="alert alert-danger">هیچ دوره‌ای برای جستجوی شما وجود ندارد</div>
-    `
+    `,
     );
   }
 
@@ -1136,7 +1146,7 @@ const globalSearch = async () => {
                 </div>
               </div>
             </div>
-      `
+      `,
       );
     });
   } else {
@@ -1144,7 +1154,7 @@ const globalSearch = async () => {
       "beforeend",
       `
       <div class="alert alert-danger">هیچ مقاله‌ای برای جستجوی شما وجود ندارد</div>
-    `
+    `,
     );
   }
 
@@ -1153,7 +1163,7 @@ const globalSearch = async () => {
 
 const submitComment = async () => {
   const commentTextareaElem = document.querySelector(
-    ".comments__score-input-respond"
+    ".comments__score-input-respond",
   );
   const commentScoreElem = document.querySelector("#comment-score");
   let score = 5;
@@ -1161,7 +1171,7 @@ const submitComment = async () => {
 
   commentScoreElem.addEventListener(
     "change",
-    (event) => (score = event.target.value)
+    (event) => (score = event.target.value),
   );
 
   const newCommentInfos = {
@@ -1186,7 +1196,7 @@ const submitComment = async () => {
       "کامنت مورد نظر شما با موفقیت ثبت شد",
       "success",
       "خیلی هم عالی",
-      () => {}
+      () => {},
     );
   }
 };
